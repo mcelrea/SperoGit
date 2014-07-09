@@ -60,6 +60,14 @@ public class Player
 		body.setTransform(x, y, 0);
 	}
 
+	public Body getBody() {
+		return body;
+	}
+
+	public void setBody(Body body) {
+		this.body = body;
+	}
+
 	public int getRow() {
 		return row;
 	}

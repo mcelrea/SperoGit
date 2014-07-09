@@ -1,6 +1,7 @@
 package 
 com.mcelrea.gameWorld;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mcelrea.screens.GamePlay;
 
 public class Area 
 {
@@ -27,7 +29,7 @@ public class Area
 		FixtureDef fixDef = new FixtureDef();
 
 
-		//top wall
+		//top wall - bounding box of area
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(0,0);
 		ChainShape shape = new ChainShape();
@@ -37,7 +39,7 @@ public class Area
 		topWall.createFixture(fixDef);
 		topWall.getFixtureList().get(0).setUserData("top wall");
 
-		//bottom wall
+		//bottom wall - bounding box of area
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(0,0);
 		shape = new ChainShape();
@@ -47,7 +49,7 @@ public class Area
 		bottomWall.createFixture(fixDef);
 		bottomWall.getFixtureList().get(0).setUserData("bottom wall");
 
-		//left wall
+		//left wall - bounding box of area
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(0,0);
 		shape = new ChainShape();
@@ -57,7 +59,7 @@ public class Area
 		leftWall.createFixture(fixDef);
 		leftWall.getFixtureList().get(0).setUserData("left wall");
 
-		//right wall
+		//right wall - bounding box of area
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(0,0);
 		shape = new ChainShape();
@@ -82,6 +84,7 @@ public class Area
 		batch.setProjectionMatrix(normalProjection);
 		batch.begin();
 		font.draw(batch, title, 100, 1000);
+		font.draw(batch, "(" + Gdx.input.getX() + "," + Gdx.input.getY() + ")", 100, 900);
 		batch.end();
 	}
 }
