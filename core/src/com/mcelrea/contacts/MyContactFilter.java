@@ -63,6 +63,11 @@ public class MyContactFilter implements ContactFilter{
 		////////////////////////End Movement Code, Collision with Bounding walls/////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////
 		
+		if(fixtureA.getUserData() instanceof DPad || fixtureB.getUserData() instanceof DPad)
+		{
+			return false;
+		}
+		
 		return true;
 	}
 

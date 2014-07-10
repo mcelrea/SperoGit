@@ -1,6 +1,7 @@
 package com.mcelrea.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mcelrea.contacts.DPad;
 import com.mcelrea.contacts.MyContactFilter;
 import com.mcelrea.gameWorld.Sector;
 import com.mcelrea.player.Player;
@@ -31,6 +33,7 @@ public class GamePlay implements Screen{
 	public static Player player;
 	public static boolean hittingLeftWall, hittingRightWall, hittingTopWall, hittingBottomWall;
 	Sector overWorld;
+	DPad dpad;
 
 	@Override
 	public void render(float delta) {
@@ -88,6 +91,8 @@ public class GamePlay implements Screen{
 		overWorld.fillAreasWithTitles(world);
 		player = new Player(world, overWorld);
 		
+		dpad = new DPad(world);
+		
 	}
 	
 	public void zoom()
@@ -132,26 +137,63 @@ public class GamePlay implements Screen{
 	
 	public void movePlayer()
 	{
+		if(Gdx.input.isTouched() || Gdx.input.isButtonPressed(Buttons.LEFT))
+		{
+			float x = Gdx.input.getX();
+			float y = Gdx.input.getY();
+			
+			Vector3 loc = new Vector3(x,y,0);
+			loc = camera.unproject(loc);
+			
+			if(Gdx.input.justTouched())
+			{
+				dpad.adjustLocation(loc.x, loc.y);
+			}
+			
+			if(dpad.leftPressed(loc.x, loc.y))
+			{
+				player.moveLeft();
+			}
+			else if(dpad.rightPressed(loc.x, loc.y))
+			{
+				player.moveRight();
+			}
+			else if(dpad.upPressed(loc.x, loc.y))
+			{
+				player.moveUp();
+			}
+			else if(dpad.downPressed(loc.x, loc.y))
+			{
+				player.moveDown();
+			}
+			else
+			{
+				player.noMovement();
+			}
+		}
 		
-		if(Gdx.input.isKeyPressed(Keys.A))
-		{
-			player.moveLeft();
-		}
-		else if(Gdx.input.isKeyPressed(Keys.D))
-		{
-			player.moveRight();
-		}
-		else if(Gdx.input.isKeyPressed(Keys.W))
-		{
-			player.moveUp();
-		}
-		else if(Gdx.input.isKeyPressed(Keys.S))// || Gdx.input.isTouched())
-		{
-			player.moveDown();
-		}
 		else
 		{
-			player.noMovement();
+			if(Gdx.input.isKeyPressed(Keys.A))
+			{
+				player.moveLeft();
+			}
+			else if(Gdx.input.isKeyPressed(Keys.D))
+			{
+				player.moveRight();
+			}
+			else if(Gdx.input.isKeyPressed(Keys.W))
+			{
+				player.moveUp();
+			}
+			else if(Gdx.input.isKeyPressed(Keys.S))// || Gdx.input.isTouched())
+			{
+				player.moveDown();
+			}
+			else
+			{
+				player.noMovement();
+			}
 		}
 	}
 
