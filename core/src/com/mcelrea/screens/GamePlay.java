@@ -7,6 +7,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -34,6 +39,9 @@ public class GamePlay implements Screen{
 	public static boolean hittingLeftWall, hittingRightWall, hittingTopWall, hittingBottomWall;
 	Sector overWorld;
 	DPad dpad;
+	TiledMapRenderer tileMapRenderer;
+	TiledMap map;
+	Matrix4 copyCamera;
 
 	@Override
 	public void render(float delta) {
@@ -42,12 +50,13 @@ public class GamePlay implements Screen{
 		
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
 		camera.update();
-		debugRenderer.render(world, camera.combined);
+		tileMapRenderer.setView(copyCamera, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		tileMapRenderer.render();
+		
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.end();
-		
 		//has it's own batch begin/end
 		player.getCurrentArea().draw(batch);
 		
@@ -57,6 +66,7 @@ public class GamePlay implements Screen{
 		}
 		
 		zoom();
+		debugRenderer.render(world, camera.combined);
 		updatePlayer();
 	}
 
@@ -76,6 +86,8 @@ public class GamePlay implements Screen{
 		world = new World(new Vector2(0,0), true);
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+
+		
 		
 		//for 1080p
 		if(Gdx.graphics.getHeight() == 1080)
@@ -92,7 +104,10 @@ public class GamePlay implements Screen{
 		player = new Player(world, overWorld);
 		
 		dpad = new DPad(world);
-		
+		map = new TmxMapLoader().load("data/testmap.tmx");
+		tileMapRenderer = new OrthogonalTiledMapRenderer(map);
+		camera.update();
+		copyCamera = camera.combined.cpy().scl(camera.zoom).translate(-Gdx.graphics.getWidth()/2, -Gdx.graphics.getHeight()/2, 0);
 	}
 	
 	public void zoom()
@@ -145,7 +160,7 @@ public class GamePlay implements Screen{
 			Vector3 loc = new Vector3(x,y,0);
 			loc = camera.unproject(loc);
 			
-			if(Gdx.input.justTouched())
+			if(loc.x < -5 && Gdx.input.justTouched())
 			{
 				dpad.adjustLocation(loc.x, loc.y);
 			}
@@ -218,7 +233,7 @@ public class GamePlay implements Screen{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+		map.dispose();
 	}
 
 }

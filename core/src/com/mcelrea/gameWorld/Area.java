@@ -4,6 +4,8 @@ com.mcelrea.gameWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -19,6 +21,7 @@ public class Area
 	private String title;
 	BitmapFont font;
 	private Body topWall, bottomWall, leftWall, rightWall;
+	TiledMap map;
 
 	public Area(String title, World world)
 	{
@@ -68,6 +71,8 @@ public class Area
 		rightWall = world.createBody(bodyDef);
 		rightWall.createFixture(fixDef);
 		rightWall.getFixtureList().get(0).setUserData("right wall");
+		
+		map = new TmxMapLoader().load("data/testmap.tmx");
 	}
 
 	public String getTitle() {
@@ -76,6 +81,16 @@ public class Area
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public TiledMap getTiledMap()
+	{
+		return map;
+	}
+	
+	public void setTiledMap(String file)
+	{
+		map = new TmxMapLoader().load(file);
 	}
 
 	public void draw(SpriteBatch batch)
