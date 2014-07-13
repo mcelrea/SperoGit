@@ -59,3 +59,4 @@ desktop/.classpath
 .metadata/.plugins/org.eclipse.debug.ui/launchConfigurationHistory.xml
 .metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
 .metadata/.plugins/org.eclipse.core.resources/.history/11/9055da6969090014178bc765e80336d6
+*.cache
